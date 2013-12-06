@@ -12,33 +12,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# X11 DISPLAY variable, needs to be set if run from cron
-[ -z "$DISPLAY" ] && export DISPLAY=:0
-
-# the path to wallpaper images
-[ -z "$WALLPAPER_PATH" ] && WALLPAPER_PATH="$HOME/share/wallpaper"
-
-# data file to identify groups of images
-FILE_CATEGORY="$WALLPAPER_PATH/category"
-
-# file to use when no .list is present
-FILE_DEFAULT="$WALLPAPER_PATH/general/default.png"
-
-# files used internally, should not be modified by hand
-FILE_LIST="$WALLPAPER_PATH/.list"
-FILE_INUSE="$WALLPAPER_PATH/.inuse"
+# config
+PROG_NAME="$(basename -- "$0")"
+FILE_CONFIG="$HOME/.config/$PROG_NAME/config"
+source "$FILE_CONFIG"
+# end
 
 # allow advanced globbing features, replaces the need for regex or scripting
 shopt -s globstar
 shopt -s extglob
 
-# wallpaper command
-set_wallpaper() {
-        [ -n "$1" ] && feh --bg-scale "$file" &>/dev/null
-}
-
-## end config
-
+# used to parse category file
 parser() {
         local status=1
 

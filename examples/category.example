@@ -1,0 +1,51 @@
+# A sample wallpaper category file
+
+# assume hierarchy:
+#
+# wallpapers/
+# 	animal/
+# 		cat.jpg
+# 	landscape/
+# 		tree.jpg
+# 		mountain.jpg
+# 	erotic/
+# 		women/
+# 			nude/
+# 				xxx.jpg
+# 			posing_on_car.jpg
+# 		anime/
+# 			hentai/
+# 				xxx.png
+# 			waifu/
+# 				moeslut.png
+# 	space/
+# 		milky_way.jpg
+
+# all available files
+all **/
+
+# non-nude files (suitable for work)
+sfw **/!(nude|hentai)/
+
+# a more strict SFW, no "erotic" category
+sfw-strict !(erotic)/**/!(nude)/
+
+# programming alone on a friday night
+#nsfw **/(nude|hentai)/
+
+# or better yet, make 2 categories:
+hentai **/hentai/
+nsfw **/nude/ hentai
+
+# categories are evaluted first and directories are not searched recursively
+# "erotic" category should recurse the entire directory
+erotic erotic/**/
+
+# only lanscapes and space
+nature landscape/ space/
+
+# append to nature category
+nature animal/
+
+# single file works too
+wcar erotic/posing_on_car.jpg

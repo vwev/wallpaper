@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Sample wallpaper configuration
+
+# Available variables:
+#	PROG_NAME	Application name.
+#	FILE_CONFIG	Full path to this file.
+
+# the path to wallpaper images, allow environment variable WALLPAPER_PATH
+[ -n "$WALLPAPER_PATH" ] || WALLPAPER_PATH="$HOME/pictures/wallpapers"
+
+# data file to identify groups of images, default is this directory
+FILE_CATEGORY="$(dirname -- "$FILE_CONFIG")/category"
+
+# file to use when no .list is present
+FILE_DEFAULT="$WALLPAPER_PATH/default.png"
+
+# files used internally, must be +rw
+FILE_LIST="/tmp/.$PROG_NAME-list"
+FILE_INUSE="/tmp/.$PROG_NAME-inuse"
+
+# command to execute to change wallpaper
+set_wallpaper() {
+	# cron tasks don't get DISPLAY and most X11 applications need it
+	[ -n "$1" ] && DISPLAY=:0 feh --bg-scale "$file" &>/dev/null
+}
