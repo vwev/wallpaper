@@ -34,110 +34,110 @@ shopt -s extglob
 
 # wallpaper command
 set_wallpaper() {
-	[ -n "$1" ] && feh --bg-scale "$file" &>/dev/null
+        [ -n "$1" ] && feh --bg-scale "$file" &>/dev/null
 }
 
 ## end config
 
 parser() {
-	local status=1
+        local status=1
 
-	[ $# -ge 2 ] && \
-	while read line
-	do
-		# extglob can be used for escapes
+        [ $# -ge 2 ] && \
+        while read line
+        do
+                # extglob can be used for escapes
 
-		# any line starting with #
-		line="${line###*}"
-		# # valid comment
-		#	# valid comment
+                # any line starting with #
+                line="${line###*}"
+                # # valid comment
+                #       # valid comment
 
-		# any whitespace followed by #
-		line="${line%%[ $'\t']#*}"
-		# text # valid comment
-		# text# invalid comment
+                # any whitespace followed by #
+                line="${line%%[ $'\t']#*}"
+                # text # valid comment
+                # text# invalid comment
 
-		# blank line/removed comment
-		[ -z "$line" ] && continue
+                # blank line/removed comment
+                [ -z "$line" ] && continue
 
-		# first field is our category
-		[ "${line%% *}" = "$1" ] && {
-			echo "${line#* }"
-			status=0
-		}
+                # first field is our category
+                [ "${line%% *}" = "$1" ] && {
+                        echo "${line#* }"
+                        status=0
+                }
 
-		# allow it to keep going, instead of breaking lines just
-		# use the same prefix
-	done <"$2"
+                # allow it to keep going, instead of breaking lines just
+                # use the same prefix
+        done <"$2"
 
-	return $status
+        return $status
 }
 
 get_path() {
-	# to avoid infinite recursion of categories
-	[ -f "$FILE_INUSE" ] \
-		&& grep -Fx -e "$1" "$FILE_INUSE" >/dev/null \
-		&& return
-	echo "$1" >>"$FILE_INUSE"
+        # to avoid infinite recursion of categories
+        [ -f "$FILE_INUSE" ] \
+                && grep -Fx -e "$1" "$FILE_INUSE" >/dev/null \
+                && return
+        echo "$1" >>"$FILE_INUSE"
 
-	category="$(parser "$1" "$FILE_CATEGORY")"
-	[ $? -eq 0 ] && \
-	for cat in $category
-	do
-		get_path "$cat"
-	done || {
-		[ -f "$1" ] && echo "$1" || \
-		[ -d "$1" ] && find "$1" -maxdepth 1 -type f -print || \
-		warning "unknown category '$1'"
-	}
+        category="$(parser "$1" "$FILE_CATEGORY")"
+        [ $? -eq 0 ] && \
+        for cat in $category
+        do
+                get_path "$cat"
+        done || {
+                [ -f "$1" ] && echo "$1" || \
+                [ -d "$1" ] && find "$1" -maxdepth 1 -type f -print || \
+                warning "unknown category '$1'"
+        }
 }
 
 error() {
-	[ -n "$1" ] && printf "%s: error: %s\n" \
-			"$(basename -- "$0")" \
-			"$1" 1>&2
-	exit 1
+        [ -n "$1" ] && printf "%s: error: %s\n" \
+                        "$(basename -- "$0")" \
+                        "$1" 1>&2
+        exit 1
 }
 
 warning() {
-	[ -n "$1" ] && printf "%s: warning: %s\n" \
-				"$(basename -- "$0")" \
-				"$1" 1>&2
+        [ -n "$1" ] && printf "%s: warning: %s\n" \
+                                "$(basename -- "$0")" \
+                                "$1" 1>&2
 }
 
 usage() {
-	cat 1>&2 <<USAGE
+        cat 1>&2 <<USAGE
 USAGE: $(basename -- "$0") [ARG] [CATEGORY] ...
 
 ARG:
-	-a, --add
-		Add categories to wallpaper list.
-	-o, --overwrite
-		Replace categories in wallpaper list. [default]
-	-l, --list
-		print wallpaper list and exit
+        -a, --add
+                Add categories to wallpaper list.
+        -o, --overwrite
+                Replace categories in wallpaper list. [default]
+        -l, --list
+                print wallpaper list and exit
 
 CATEGORY:
-	A list of files, directories or category file entries.
+        A list of files, directories or category file entries.
 
 ENVIRONMENT VARIABLES:
-	WALLPAPER_PATH
-		The path to wallpaper images.
+        WALLPAPER_PATH
+                The path to wallpaper images.
 NOTE:
-	When invoked with no arguments, it will set a random wallpaper
-	from the list.
+        When invoked with no arguments, it will set a random wallpaper
+        from the list.
 USAGE
-	exit 1
+        exit 1
 }
 
 # TODO: replace with getopts (no long options)
 [ $# -ge 1 ] && \
 case "$1" in
-(-\?|-h|--help)		usage;;
-(-a|--add)		shift;;
-(-l|--list)		cat "$FILE_LIST" 2>/dev/null; exit;;
-(-!(o|-overwrite))	error "unknown option '$1'";;
-(*)			rm -f -- "$FILE_INUSE" "$FILE_LIST";;
+(-\?|-h|--help)         usage;;
+(-a|--add)              shift;;
+(-l|--list)             cat "$FILE_LIST" 2>/dev/null; exit;;
+(-!(o|-overwrite))      error "unknown option '$1'";;
+(*)                     rm -f -- "$FILE_INUSE" "$FILE_LIST";;
 esac
 
 # use relative paths
@@ -147,7 +147,7 @@ pushd "$WALLPAPER_PATH" >/dev/null
 [ $# -ge 1 ] && \
 for c in $@
 do
-	get_path "$c" >>"$FILE_LIST"
+        get_path "$c" >>"$FILE_LIST"
 done
 
 file="$FILE_DEFAULT"
