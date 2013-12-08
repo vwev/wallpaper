@@ -114,13 +114,12 @@ USAGE
         exit 1
 }
 
-# TODO: replace with getopts (no long options)
 [ $# -ge 1 ] && \
 case "$1" in
 (-\?|-h|--help)         usage;;
-(-a|--add)              shift;;
+(-a|--add|--)           shift;;
 (-l|--list)             cat "$FILE_LIST" 2>/dev/null; exit;;
-(-!(o|-overwrite))      error "unknown option '$1'";;
+(-!(o|-overwrite))    error "unknown option '$1'";;
 (*)                     rm -f -- "$FILE_INUSE" "$FILE_LIST";;
 esac
 

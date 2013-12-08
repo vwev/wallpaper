@@ -49,3 +49,6 @@ nature animal/
 
 # single file works too
 wcar erotic/posing_on_car.jpg
+
+# don't worry about infinite recursion
+recurse recurse # does nothing
